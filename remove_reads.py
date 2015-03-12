@@ -9,7 +9,7 @@ if len(sys.argv) != 3:
               This is a prgram to remove records from id list\n\
               output is a fastq file\n\
                     1. sequence file needs to be fastq\n\
-                    2. idfile is one id per line text file')
+                    2. idfile is one id per line text file (without "@" sign in front of the id )')
 
 # set up fastq index
 index = {id.split(' ')[0]:'@%s\n%s\n+\n%s' %(id,seq,qual) for id, seq, qual in FastqGeneralIterator(open(sys.argv[1]))}
