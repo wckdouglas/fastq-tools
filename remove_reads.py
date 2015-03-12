@@ -1,7 +1,7 @@
 #!/bin/env python
 
 from Bio.SeqIO.QualityIO import FastqGeneralIterator
-import fileinput,sys
+import sys
 
 
 if len(sys.argv) != 3:
