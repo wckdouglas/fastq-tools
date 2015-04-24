@@ -37,3 +37,5 @@ For a Fastq file with 8720139 reads, id file with 4477244 ids:
 	## 1:05.44 total
 
 Major difference, filterReads.c hashed id list instead of fastq file when comparing to remove_reads.py
+Blog post: [python script](http://wckdouglas.github.io/mediator/feature/2015/03/18/fastq_extract.html)
+Updated blog post: [C program and comparison](http://wckdouglas.github.io/mediator/feature/2015/04/24/fastq_extract-updated.html)
