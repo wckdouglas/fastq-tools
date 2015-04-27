@@ -1,5 +1,11 @@
 CC=gcc
 CFLAGS=-lz
 
-filterReads: filterReads.c  khash.h  kseq.h
-	$(CC) -lz filterReads.c -o filterReads
+all: filterReads extractSeq
+
+filterReads: 
+	$(CC) $(CFLAGS) -o filterReads filterReads.c  
+
+extractSeq: 
+	$(CC) $(CFLAGS) -o extractSeq extractSeq.c 
+
