@@ -1,4 +1,4 @@
-# fastq_manipulation
+## fastq manipulation
 
 ---
 I will store any NGS manipulation scripts in this repository.
