@@ -8,7 +8,7 @@ KSEQ_INIT(gzFile, gzread);
 KHASH_SET_INIT_STR(s)
 #define BUF_SIZE 2048
 
-char *strstrip(char *s)
+char *strstrip(char *s) // function for striping lines
 {
         size_t size;
         char *end;
@@ -48,17 +48,17 @@ int main(int argc , char *argv[]){
 	}
 	printf("Reading file: %s...\n" ,argv[2] );
 
-	//idFile read
+	//idFile read and put in index
 	h = kh_init(s);
-	fp = fopen(argv[2], "rb"); // FIXME: check fp
+	fp = fopen(argv[2], "rb"); 
 	while (fgets(buf, BUF_SIZE, fp)){
-		kh_put(s, h, strstrip(strdup(buf)), &ret);	// FIXME: check ret
+		kh_put(s, h, strstrip(strdup(buf)), &ret);
 	}
 	fclose(fp);
 
 
 	//open fastq file
-	fp = gzopen(argv[1],"r");
+	fp = gzopen(argv[1],"r"); // open fastq file for kseq parsing 
 	seq = kseq_init(fp);
 
 	// start reading sequecne
@@ -69,7 +69,7 @@ int main(int argc , char *argv[]){
 		sequence = seq -> seq.s;
 		flag = (kh_get(s, h, id) == kh_end(h));
 		if (flag==1){
-			printf("@%s\t%s\n%s\n+\n%s\n", id,comment,sequence,qual);
+			printf("@%s\t%s\n%s\n+\n%s\n", id,comment,sequence,qual); // print out seqeunce in fastq format
 		}
 	}
 	kh_destroy(s,h);
