@@ -11,3 +11,6 @@ This will compile the two programs:
 2. extracSeq
     Result fastq file will contain all reads that do not has ID matching id in <idFile>
     Usage: ./extractSeq <fastq file> <idFile>  >  <new fastq file>
+
+
+
