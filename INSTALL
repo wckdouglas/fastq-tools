@@ -1,0 +1,13 @@
+To install/ compile the two tools,
+
+  make
+
+This will compile the two programs: 
+
+1. filterReads
+    Result fastq file will contain all reads that has an ID matching id in <idFile>
+    Usage: ./filterReads <fastq file> <idFile> > <new fastq file>
+
+2. extracSeq
+    Result fastq file will contain all reads that do not has ID matching id in <idFile>
+    Usage: ./extractSeq <fastq file> <idFile>  >  <new fastq file>
