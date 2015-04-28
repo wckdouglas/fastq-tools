@@ -43,10 +43,10 @@ int main(int argc , char *argv[]){
 
 	// print usage if not enough argumnets
 	if (argc != 3){
-		fprintf(stderr,"Usage: %s <fastq file> <idFile>\n",argv[0]);
+		fprintf(stderr,"Usage: %s <fastq file> <idFile> > <new fastq file>\n",argv[0]);
 		return 1;
 	}
-	fprintf(stderr,"Reading file: %s...\n" ,argv[2] );
+	fprintf(stderr,"Reading file: %s\nFrom %s...\n" ,argv[2],argv[1] );
 
 	//idFile read and put in index
 	h = kh_init(s);
