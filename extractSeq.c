@@ -46,7 +46,7 @@ int main(int argc , char *argv[]){
 		fprintf(stderr,"Usage: %s <fastq file> <idFile>\n",argv[0]);
 		return 1;
 	}
-	printf("Reading file: %s...\n" ,argv[2] );
+	fprintf(stderr,"Reading file: %s...\n" ,argv[2] );
 
 	//idFile read and put in index
 	h = kh_init(s);
