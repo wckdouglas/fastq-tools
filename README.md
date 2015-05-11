@@ -42,3 +42,10 @@ Major difference, filterReads.c hashed id list instead of fastq file when compar
 ---
 Blog post: [python script](http://wckdouglas.github.io/mediator/feature/2015/03/18/fastq_extract.html)		
 Updated blog post: [C program and comparison](http://wckdouglas.github.io/mediator/feature/2015/04/24/fastq_extract-updated.html)
+
+
+---
+sam2fastq.py is a script to extract unmapped reads from sam file and write it in fastq format.
+usage: samtools view \<mapped.bam\> \| ./sam2fastq.py - \> \<out.fq\>
+
+
