@@ -45,7 +45,6 @@ Updated blog post: [C program and comparison](http://wckdouglas.github.io/mediat
 
 
 ---
-sam2fastq.py is a script to extract unmapped reads from sam file and write it in fastq format.
+sam2fastq.py is a script to extract unmapped reads from sam file and write it in fastq format.    
+
 usage: samtools view \<mapped.bam\> \| ./sam2fastq.py - \> \<out.fq\>
-
-
