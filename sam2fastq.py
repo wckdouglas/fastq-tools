@@ -1,9 +1,16 @@
-#!/bin/env python
+#!/usr/bin/env python
+
+# This script print out fastq reads from sam file
+# that are not mapped to references
+
 
 from __future__ import division
 import fileinput
 import time
 import sys
+
+if len(sys.argv) != 2:
+	sys.exit('usage: samtools view <mapped.bam> | %s - > <out.fq>\n' %sys.argv[0])
 
 start = time.time()
 i = 0
