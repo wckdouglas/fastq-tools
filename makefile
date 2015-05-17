@@ -1,11 +1,11 @@
 CC=gcc
 CFLAGS=-lz
 
-all: filterReads extractSeq
+all: filterFastq
 
-filterReads: 
-	$(CC) $(CFLAGS) -o filterReads filterReads.c  
+filterFastq: 
+	$(CC) $(CFLAGS) -o filterFastq filterFastq.c  
 
-extractSeq: 
-	$(CC) $(CFLAGS) -o extractSeq extractSeq.c 
+#extractSeq: 
+#	$(CC) $(CFLAGS) -o extractSeq extractSeq.c 
 
