@@ -39,6 +39,10 @@ For a Fastq file with 8720139 reads, id file with 4477244 ids:
 
 Major difference, filterReads.c hashed id list instead of fastq file when comparing to remove_reads.py
 
+updated:
+I have combined **filterReads** and **extractSeq** into **filterFastq**. Switching between exlusion mode and inclusion mode is done by adding -v flag.
+
+
 ---
 Blog post: [python script](http://wckdouglas.github.io/mediator/feature/2015/03/18/fastq_extract.html)		
 Updated blog post: [C program and comparison](http://wckdouglas.github.io/mediator/feature/2015/04/24/fastq_extract-updated.html)
