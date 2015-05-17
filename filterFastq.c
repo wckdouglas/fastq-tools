@@ -39,6 +39,7 @@ int writeSequence(char *idFile, char *fqFile, int mode){
 	gzFile fp;
 	kseq_t *seq;
 	int lineno = 0, flag = 0, ret,l;
+	int seqCount = 0 ;
 	char *id, *sequence, *qual, *comment=0;
 
 	// hashing id file
@@ -68,6 +69,7 @@ int writeSequence(char *idFile, char *fqFile, int mode){
 			if (flag==1){
 				// print out seqeunce in fastq format
 				printf("@%s\t%s\n%s\n+\n%s\n", id,comment,sequence,qual); 
+				seqCount ++;
 			}
 		}
 	}
@@ -84,9 +86,11 @@ int writeSequence(char *idFile, char *fqFile, int mode){
 			if (flag==1){
 				// print out seqeunce in fastq format
 				printf("@%s\t%s\n%s\n+\n%s\n", id,comment,sequence,qual); 
+				seqCount ++;
 			}
 		}
 	}
+	fprintf(stderr,"Written %i sequences from %s.\n",seqCount,fqFile);
 	kh_destroy(s,h);
 	return 0;
 }
