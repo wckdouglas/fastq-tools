@@ -1,11 +1,13 @@
 CC=gcc
+Cpp=g++
 CFLAGS=-lz
+CPPFlags=-lgzstream -lz -Wall
 
-all: filterFastq
+all: filterFastq fastqSize
 
 filterFastq: 
-	$(CC) $(CFLAGS) -o filterFastq filterFastq.c  
+	$(CC) filterFastq.c -o filterFastq  $(CFLAGS)
 
-#extractSeq: 
-#	$(CC) $(CFLAGS) -o extractSeq extractSeq.c 
+fastqSize: 
+	$(Cpp) fastqSize.cpp -o fastqSize  $(CPPFlags)
 
