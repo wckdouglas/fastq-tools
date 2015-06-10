@@ -1,16 +1,29 @@
 #include <zlib.h>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <string.h>
 #include <unistd.h>
-#include "kseq.h"
-#include "khash.h"
 #include <string>
+#include <vector>
+#include <unordered_set>
+
+
 
 using namespace std;
+typedef unordered_set< string > idSet;
+typedef vector<string> stringList;
 
-KSEQ_INIT(gzFile, gzread)
-KHASH_SET_INIT_STR(s)
+stringList &split(const string &s, char delim, stringList &result) 
+{
+        stringstream ss(s);
+        string item;
+        while (getline(ss, item, delim)) 
+        {
+                result.push_back(item);
+        }
+        return result;
+}
 
 int printSeq(string id, string sequence, string qual, string comment)
 {
@@ -22,62 +35,77 @@ int printSeq(string id, string sequence, string qual, string comment)
 	return 0;
 }
 
-int filterSequence(const char *fqFile, int mode, kh_s_t *h)
+
+int checkPass (string id, string sequence, string comment , string qual, idSet &ids, int mode, int &seqCount)
 {
-	cerr << "Reading fastq file: "<< fqFile << endl;
+	//perform extraction
+	if (mode == 1 &&  ids.find(id) == ids.end())
+	{
+		// print out seqeunce in fastq format
+		printSeq(id,sequence,qual,comment); 
+		seqCount ++;
+	}
+	else if (mode == 0 && ids.find(id) != ids.end())
+	{
+		// print out seqeunce in fastq format
+		printSeq(id,sequence,qual,comment); 
+		seqCount ++;
+	}
+	return 0;
+}
+
+int filterSequence(string fqFile, int mode, idSet &ids)
+{
 	//declare variable
-	gzFile fp;
-	kseq_t *seq;
-	int seqCount = 0, seqNo = 0;
+	int seqCount = 0, seqNo = 0, hashPos, lineno = 0;
+	string id, comment, qual, sequence;
 
 	//open fastq file
-	fp = gzopen(fqFile,"r"); // open fastq file for kseq parsing 
-	seq = kseq_init(fp);
+	cerr << "Reading fastq file: "<< fqFile << endl;
 
 	//================================================================
 	// filter id
-	while (kseq_read(seq) >= 0)
+	ifstream fastq(fqFile);
+	for (string line; getline(fastq,line);)
 	{
-		seqNo ++;
-		//define sequencing read elements
-		string id(seq -> name.s);
-		string comment(seq -> comment.s);
-		string qual(seq -> qual.s);
-		string sequence(seq -> seq.s);
-		int hashPos = kh_get(s, h, id.c_str());
+		lineno ++;
+		if (lineno == 1)
+		{
+			stringList blocks;
+			split(line,' ',blocks);
+			id = blocks[0].substr(1,blocks[0].length());
+			comment = blocks[1];
+		}
+		else if (lineno == 2)
+		{
+			sequence = line;
+		}
+		else if (lineno == 4)
+		{
+			qual = line;
+			checkPass(id, sequence, comment, qual, ids, mode, seqCount);
+			seqNo ++;
+			lineno = 0;
+		}
 
-		//perform extraction
-		if (mode == 1 && hashPos == kh_end(h))
-		{
-			// print out seqeunce in fastq format
-			printSeq(id,sequence,qual,comment); 
-			seqCount ++;
-		}
-		else if (mode == 0 && hashPos < kh_end(h))
-		{
-			// print out seqeunce in fastq format
-			printSeq(id,sequence,qual,comment); 
-			seqCount ++;
-		}
 	}
-	cerr << "Written " << seqCount << " sequences from ";
-	cerr << fqFile << " with " << seqNo << endl;
-	kseq_destroy(seq);
-	gzclose(fp);
+	cerr << "Written " << seqCount << " reads from ";
+	cerr << fqFile << " with " << seqNo << " reads"<< endl;
 	return 0;
 }
 
-int indexing(string idFile, kh_s_t *hashTable)
+int hashing(string idFile, idSet &ids)
 {
 	int ret;
 	cerr << "Hashing ID file: " << idFile  << endl;
-	ifstream idfile(idFile);
-	for (string line; getline(idfile,line);)
+	ifstream id(idFile);
+	for (string line; getline(id,line);)
 	{
-		kh_put(s, hashTable, strdup(line.c_str()), &ret);
+		ids.insert(line);
 	}
 	return 0;
 }
+
 
 int usage()
 {
@@ -92,8 +120,8 @@ int usage()
 // main function
 int main(int argc, char **argv)
 {
-	string  idFile;	
-	char * fqFile;
+	string idFile;	
+	string fqFile;
 	int mode = 0;
 	int c;
 
@@ -125,15 +153,12 @@ int main(int argc, char **argv)
 				abort();
 		}
     }
-	//hasing table
-	khash_t(s) *hashTable;
-	khint_t k;
-	hashTable = kh_init(s);
-	indexing(idFile,hashTable);
 
+	//hasing table
+	idSet ids;
 	// create hashing table
-	filterSequence(fqFile, mode, hashTable);
-	kh_destroy(s,hashTable);
+	hashing(idFile, ids);
+	filterSequence(fqFile, mode, ids);
 	return 0;
 }
 
