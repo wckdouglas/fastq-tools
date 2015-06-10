@@ -7,7 +7,7 @@ all: filterFastq fastqSize
 
 filterFastq: 
 	$(CC) filterFastq.c -o filterFastqC  $(CFLAGS)
-	$(Cpp) filterFastq.cpp -o filterFastqCPP  $(CFLAGS)
+	$(Cpp) filterFastq.cpp -o filterFastq  $(CFLAGS)
 
 fastqSize: 
 	$(Cpp) fastqSize.cpp -o fastqSize  $(CPPFlags)

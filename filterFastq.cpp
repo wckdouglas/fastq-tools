@@ -15,10 +15,10 @@ KHASH_SET_INIT_STR(s)
 int printSeq(string id, string sequence, string qual, string comment)
 {
 	//print
-	cout << "@" << id << '\t' << comment << endl;
-	cout << sequence << endl;
-	cout << '+' << endl;
-	cout << qual << endl; 
+	cout << "@" << id << '\t' << comment << '\n';
+	cout << sequence << '\n';
+	cout << '+' << '\n';
+	cout << qual << '\n'; 
 	return 0;
 }
 
@@ -28,7 +28,7 @@ int filterSequence(const char *fqFile, int mode, kh_s_t *h)
 	//declare variable
 	gzFile fp;
 	kseq_t *seq;
-	int flag = 0, seqCount = 0 ;
+	int seqCount = 0, seqNo = 0;
 
 	//open fastq file
 	fp = gzopen(fqFile,"r"); // open fastq file for kseq parsing 
@@ -38,6 +38,7 @@ int filterSequence(const char *fqFile, int mode, kh_s_t *h)
 	// filter id
 	while (kseq_read(seq) >= 0)
 	{
+		seqNo ++;
 		//define sequencing read elements
 		string id(seq -> name.s);
 		string comment(seq -> comment.s);
@@ -59,7 +60,8 @@ int filterSequence(const char *fqFile, int mode, kh_s_t *h)
 			seqCount ++;
 		}
 	}
-	cerr << "Written " << seqCount << " sequences from " << fqFile << endl;
+	cerr << "Written " << seqCount << " sequences from ";
+	cerr << fqFile << " with " << seqNo << endl;
 	kseq_destroy(seq);
 	gzclose(fp);
 	return 0;
