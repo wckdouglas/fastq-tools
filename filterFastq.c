@@ -9,14 +9,7 @@ KSEQ_INIT(gzFile, gzread);
 KHASH_SET_INIT_STR(s)
 #define BUF_SIZE 2048
 
-int printSeq(char *id, char *sequence, char * qual, char *comment)
-{
-	printf("@%s\t%s\n%s\n+\n%s\n", id,comment,sequence,qual); 
-	return 0;
-}
-
-int writeSequence(char *idFile, char *fqFile, int mode)
-{
+int writeSequence(char *idFile, char *fqFile, int mode){
 	//function for write fastq//
 	fprintf(stderr,"Reading file: %s\nFrom %s...\n" ,idFile,fqFile);
 	
@@ -45,60 +38,61 @@ int writeSequence(char *idFile, char *fqFile, int mode)
 
 	//================================================================
 	// filter id
-	while ((l = kseq_read(seq)) >= 0)
-	{
-		id = seq -> name.s;
-		comment = seq -> comment.s;
-		qual = seq -> qual.s;
-		sequence = seq -> seq.s;
-		flag = (kh_get(s, h, id) == kh_end(h));
-		if (flag==1 && mode == 1)
-		{
-			// print out seqeunce in fastq format
-			printSeq(id,comment,sequence,qual); 
-			seqCount ++;
-		}
-		else if (flag != 1 && mode == 0)
-		{
-			// print out seqeunce in fastq format
-			printSeq(id,comment,sequence,qual); 
-			seqCount ++;
+	if (mode == 1){
+		while ((l = kseq_read(seq)) >= 0){
+			id = seq -> name.s;
+			comment = seq -> comment.s;
+			qual = seq -> qual.s;
+			sequence = seq -> seq.s;
+			flag = (kh_get(s, h, id) == kh_end(h));
+			if (flag==1){
+				// print out seqeunce in fastq format
+				printf("@%s\t%s\n%s\n+\n%s\n", id,comment,sequence,qual); 
+				seqCount ++;
+			}
 		}
 	}
 	
+	
+	// extract id seq
+	else {
+		while ((l = kseq_read(seq)) >= 0){
+			id = seq -> name.s;
+			comment = seq -> comment.s;
+			qual = seq -> qual.s;
+			sequence = seq -> seq.s;
+			flag = (kh_get(s, h, id) < kh_end(h));
+			if (flag==1){
+				// print out seqeunce in fastq format
+				printf("@%s\t%s\n%s\n+\n%s\n", id,comment,sequence,qual); 
+				seqCount ++;
+			}
+		}
+	}
 	fprintf(stderr,"Written %i sequences from %s.\n",seqCount,fqFile);
 	kh_destroy(s,h);
 	return 0;
 }
 
-void usage()
-{
-	fprintf(stderr,"usage: filterFastq [options]\n\n"
-			"[options]\n"
-			"\t-q\t<fastq file>\n" 
-			"\t-i\t<idFile>\n" 
-			"\t-v\tinverted match (same as grep -v)\n");
-}
-
 // main function
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv){
 	char *fqFile, *idFile;	
 	int mode = 0;
 	int c;
 
-	if (argc == 1)
-	{
-		usage();
+	if (argc == 1){
+		fprintf(stderr,"usage: filterFastq [options]\n\n"
+				"[options]\n"
+				"\t-q\t<fastq file>\n" 
+				"\t-i\t<idFile>\n" 
+				"\t-v\tinverted match (same as grep -v)\n");
 		return 1;
 	}
 	
 	opterr = 0;
 	// print usage if not enough argumnets
-	while ((c = getopt(argc, argv, "vq:i:")) != -1)
-	{
-		switch (c)
-		{
+	while ((c = getopt(argc, argv, "vq:i:")) != -1){
+		switch (c){
 			case 'q':
 				fqFile = optarg;
 				break;
@@ -109,7 +103,23 @@ int main(int argc, char **argv)
 				mode = 1;
 				break;
 			case '?':
-				usage();
+				if (optopt == 'q' || optopt == 'i'){
+					fprintf(stderr,"usage: filterFastq [options]\n\n"
+							"[options]\n"
+							"\t-q\t<fastq file>\n" 
+							"\t-i\t<idFile>\n"
+							"\t-v\tinverted match (same as grep -v)\n");
+				}
+				else if (isprint (optopt)){
+					fprintf (stderr, "Unknown option `-%c'.\n", optopt);
+				}
+				else {
+					fprintf(stderr,"usage: filterFastq [options]\n\n"
+							"[options]\n"
+							"\t-q\t<fastq file>\n" 
+							"\t-i\t<idFile>\n" 
+							"\t-v\tinverted match (same as grep -v)\n");
+				}
 				return 1;
 			default:
 				abort();
