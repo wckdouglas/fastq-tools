@@ -1,115 +1,104 @@
-#include <iostream>
+#include <zlib.h>
 #include <fstream>
-#include <sstream>
-#include <string>
-#include <vector>
-#include <map>
-#include <stdlib.h>
+#include <iostream>
+#include <string.h>
 #include <unistd.h>
-#include <ctype.h>
+#include "kseq.h"
+#include "khash.h"
+#include <string>
 
 using namespace std;
 
-typedef vector<string> stringList;
-typedef map<string, int> idIdx;
+KSEQ_INIT(gzFile, gzread)
+KHASH_SET_INIT_STR(s)
 
-class seqRecord
+int printSeq(string id, string sequence, string qual, string comment)
 {
-	public:
-		string id;
-		string idLine;
-		string sequence;
-		string quality;
-};
-
-
-//split function to split line with desired deliminator
-stringList &split(const string &s, char delim, stringList &result)
-{
-    stringstream ss(s);
-    string item;
-    while (getline(ss, item, delim))
-    {
-    	result.push_back(item);
-    }
-    return result;
-}
-
-
-int readID(char *idFile, idIdx &seqIdx)
-{
-	ifstream idfile(idFile);
-	string id;
-	for (string line; std::getline(idfile,line);)
-	{
-		stringList names;
-		split(line,' ',names);
-		id = names[0];
-		seqIdx[id] = 0;
-	}
+	//print
+	cout << "@" << id << '\t' << comment << endl;
+	cout << sequence << endl;
+	cout << '+' << endl;
+	cout << qual << endl; 
 	return 0;
 }
 
-int readFq(char *fqFile, idIdx seqIdx, int mode)
+int filterSequence(const char *fqFile, int mode, kh_s_t *h)
 {
-	ifstream fqfile(fqFile);
-	int lineNo = 0;
-	seqRecord seq;
-	string id;
-	for (string line; std::getline(fqfile,line);)
+	cerr << "Reading fastq file: "<< fqFile << endl;
+	//declare variable
+	gzFile fp;
+	kseq_t *seq;
+	int flag = 0, seqCount = 0 ;
+
+	//open fastq file
+	fp = gzopen(fqFile,"r"); // open fastq file for kseq parsing 
+	seq = kseq_init(fp);
+
+	//================================================================
+	// filter id
+	while (kseq_read(seq) >= 0)
 	{
-		lineNo ++ ;
-		if (lineNo == 1)
+		//define sequencing read elements
+		string id(seq -> name.s);
+		string comment(seq -> comment.s);
+		string qual(seq -> qual.s);
+		string sequence(seq -> seq.s);
+		int hashPos = kh_get(s, h, id.c_str());
+
+		//perform extraction
+		if (mode == 1 && hashPos == kh_end(h))
 		{
-			stringList idLine;
-			split(line,' ',idLine);
-			id = idLine[0];
-			seq.id = id.substr(1,id.length()-1);
-			seq.idLine = line;
+			// print out seqeunce in fastq format
+			printSeq(id,sequence,qual,comment); 
+			seqCount ++;
 		}
-		else if (lineNo == 2)
+		else if (mode == 0 && hashPos < kh_end(h))
 		{
-			seq.sequence = line;
+			// print out seqeunce in fastq format
+			printSeq(id,sequence,qual,comment); 
+			seqCount ++;
 		}
-		else if (lineNo == 4)
-		{
-			seq.quality = line;
-			if (seqIdx.find(seq.id) == seqIdx.end() && mode == 1)
-			{
-				cout << seq.idLine << "\n" << seq.sequence << "\n";
-				cout << "+\n" << seq.quality << endl;
-			}
-			else if (seqIdx.find(seq.id) != seqIdx.end() && mode == 0)
-			{
-				cout << seq.idLine << "\n" << seq.sequence << "\n";
-				cout << "+\n" << seq.quality << endl;
-			}
-			lineNo = 0;
-			seqRecord seq;
-		}
+	}
+	cerr << "Written " << seqCount << " sequences from " << fqFile << endl;
+	kseq_destroy(seq);
+	gzclose(fp);
+	return 0;
+}
+
+int indexing(string idFile, kh_s_t *hashTable)
+{
+	int ret;
+	cerr << "Hashing ID file: " << idFile  << endl;
+	ifstream idfile(idFile);
+	for (string line; getline(idfile,line);)
+	{
+		kh_put(s, hashTable, strdup(line.c_str()), &ret);
 	}
 	return 0;
 }
 
 int usage()
 {
-	cerr << "usage: filterFastq -q <fastqFile> -i <idFile> [-v]" << endl;
-	cerr << "[options]" << endl;
-	cerr << "-q" << "              <fastq file>" << endl;
-	cerr << "-i" << "              <idFile>"  << endl;
-	cerr << "-v" << "              inverted match (same as grep -v))"<< endl;
+	cerr << "usage: filterFastq -i <id file> -q <fastq file> [-v]" << endl;
+	cerr << endl;
+	cerr << "-q" << "      <fastq file>" << endl; 
+	cerr << "-i" << "      <idFile>" << endl;
+	cerr << "-v" << "      inverted match (same as grep -v)" << endl;
 	return 0;
 }
 
 // main function
-int main(int argc, char ** argv)
+int main(int argc, char **argv)
 {
-	char *fqFile, *idFile;	
+	string  idFile;	
+	char * fqFile;
 	int mode = 0;
 	int c;
+
 	if (argc == 1)
 	{
 		usage();
+		return 1;
 	}
 	
 	opterr = 0;
@@ -134,11 +123,15 @@ int main(int argc, char ** argv)
 				abort();
 		}
     }
+	//hasing table
+	khash_t(s) *hashTable;
+	khint_t k;
+	hashTable = kh_init(s);
+	indexing(idFile,hashTable);
 
-	// pass variable to fnuction
-	idIdx seqIdx;
-	readID(idFile, seqIdx);
-	readFq(fqFile, seqIdx, mode);
+	// create hashing table
+	filterSequence(fqFile, mode, hashTable);
+	kh_destroy(s,hashTable);
 	return 0;
 }
 
