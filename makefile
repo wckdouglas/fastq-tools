@@ -1,22 +1,19 @@
 CC=gcc
 Cpp=g++
-MKDIR = mkdir 
+MKDIR=mkdir -p
 CFLAGS=-lz
 CPPFlags=-lgzstream -lz -Wall
-
-.PHONY: binary
-
-
+INCLUDE=-l include
 
 all: binary filterFastq fastqSize
 
 binary:
-	${MKDIR}  ./bin
+	$(MKDIR)  bin
 
 filterFastq: 
-	$(CC) filterFastq.c -o ./bin/filterFastq  $(CFLAGS)
-	$(Cpp) filterFastq.cpp -o ./bin/filterFastqCPP  $(CFLAGS)
+	$(CC) src/filterFastq.c -o bin/filterFastq  $(CFLAGS) $(INCLUDE)
+	$(Cpp) src/filterFastq.cpp -o bin/filterFastqCPP  $(CFLAGS) $(INCLUDE)
 
 fastqSize: 
-	$(Cpp) fastqSize.cpp -o ./bin/fastqSize  $(CPPFlags)
+	$(Cpp) src/fastqSize.cpp -o bin/fastqSize  $(CPPFlags)
 
