@@ -3,7 +3,7 @@ Cpp=g++
 MKDIR=mkdir -p
 CFLAGS=-lz
 CPPFlags=-lgzstream -lz -Wall
-INCLUDE=-l include
+INCLUDE=-I include
 
 all: binary filterFastq fastqSize
 
