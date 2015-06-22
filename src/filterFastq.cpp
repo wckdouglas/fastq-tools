@@ -10,15 +10,19 @@
 #include "khash.h"
 
 using namespace std;
-KSEQ_INIT(gzFile, gzread);
-KHASH_SET_INIT_STR(s)
+KSEQ_INIT(gzFile, gzread); //declaring sequence file
+KHASH_SET_INIT_STR(s) // declaring khash -- (set<string> or can be map<string>)
 
+//print as fastq file
 void printSeq(char *id, char * comment, char *sequence, char *qual)
 {
 	printf("@%s\t%s\n%s\n+\n%s\n",id,comment,sequence,qual);
 }
 
 
+//get the id hash table and 
+//iterate over the fastq file
+// determine which sequence to print out
 void filterFastq(char *fqFile, int &seqCount, int mode, kh_s_t *h)
 {
 	// open fastq file for kseq parsing 
@@ -53,6 +57,7 @@ void filterFastq(char *fqFile, int &seqCount, int mode, kh_s_t *h)
 	gzclose(fq);
 }
 
+// hashing the id file into a hash table
 void getID(char *idFile, int mode, kh_s_t *h)
 {
 	//function for write fastq//
@@ -66,12 +71,13 @@ void getID(char *idFile, int mode, kh_s_t *h)
 	ifstream fp(idFile); 
 	for (string line; getline(fp,line);)
 	{
-		kh_put(s, h, strdup(line.c_str()), &ret);
+		kh_put(s, h, strdup(line.c_str()), &ret); //strdup is very important!!
 		idCount ++;
 	}
 	cerr << "Read "<< idCount << " ids." << endl;
 }
 
+// print usage
 void usage(string programname)
 {
 	cerr << "usage: "<< programname << "[options]" << endl;
