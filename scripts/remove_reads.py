@@ -10,18 +10,19 @@ if len(sys.argv) != 3:
               \n      1. sequence file needs to be fastq \
               \n      2. idfile is one id per line text file (without "@" sign in front of the id )\n')
 
-# set up fastq index
-index = {id.split(' ')[0]:'@%s\n%s\n+\n%s' %(id,seq,qual) for id, seq, qual in FastqGeneralIterator(open(sys.argv[1]))}
 
 # read mapped ID
-mapped_id_list = [line.strip() for line in open(sys.argv[2],'r')]
+index = {line.strip():1  for line in open(sys.argv[2],'r')}
+sys.stderr.write ('Indexed!\n')
 
-# get unmapped IDs
-ids = set(index.keys()) - set(mapped_id_list)
-ids = list(ids)
-ids.sort()
 
 # print sequences
-for id in ids:
-    print index[id]
+count = 0
+for id, seq, qual in FastqGeneralIterator(open(sys.argv[1])):
+	try: 
+		a = index[id.split(' ')[0]]
+		pass
+	except KeyError:
+		print "@%s\n%s\n+\n%s" %(id,seq,qual)
+
 
