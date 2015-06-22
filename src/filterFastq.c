@@ -40,12 +40,11 @@ int writeSequence(char *idFile, char *fqFile, int mode){
 	gzFile fp;
 	kseq_t *seq;
 	int lineno = 0, ret, l, seqCount = 0 ,flag;
-	char *id, *sequence, *qual, *comment=0;
+	char *id, *sequence, *qual, *comment;
 
 	// hashing id file
-	khash_t(s) *h;
 	khint_t k;
-	h = kh_init(s);
+	khash_t(s) *h = kh_init(s);
 	fp = fopen(idFile, "rb"); 
 	while (fgets(buf, BUF_SIZE, fp)){
 		kh_put(s, h, strstrip(strdup(buf)), &ret);
