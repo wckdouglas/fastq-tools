@@ -11,8 +11,8 @@ binary:
 	$(MKDIR)  bin
 
 filterFastq: 
-	$(CC) src/filterFastq.c -o bin/filterFastq  $(CFLAGS) $(INCLUDE)
-	$(Cpp) src/filterFastq.cpp -o bin/filterFastqCPP  $(CFLAGS) $(INCLUDE)
+	$(CC) src/filterFastq.c -o bin/filterFastqC  $(CFLAGS) $(INCLUDE)
+	$(Cpp) src/filterFastq.cpp -o bin/filterFastq  $(CFLAGS) $(INCLUDE)
 
 fastqSize: 
 	$(Cpp) src/fastqSize.cpp -o bin/fastqSize  $(CPPFlags)
