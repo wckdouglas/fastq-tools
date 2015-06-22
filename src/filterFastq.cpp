@@ -114,6 +114,7 @@ int main(int argc, char **argv){
 				break;
 			case '?':
 				if (optopt == 'q' || optopt == 'i'){
+					usage(programname);
 				}
 				else if (isprint (optopt)){
 					usage(programname);
