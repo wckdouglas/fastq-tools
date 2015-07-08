@@ -45,7 +45,7 @@ For a Fastq file with 8720139 reads, id file with 4477244 ids:
 	## 99% cpu
 	## 1:05.44 total
 
-Major difference, filterReads.c hashed id list instead of fastq file when comparing to remove_reads.py
+Major difference, filterReads.c hashed id list using [seqtk library](https://github.com/lh3/seqtk.git) instead of fastq file when comparing to remove_reads.py
 
 updated:
 I have combined **filterReads** and **extractSeq** into **filterFastq**. Switching between exlusion mode and inclusion mode is done by adding -v flag.
