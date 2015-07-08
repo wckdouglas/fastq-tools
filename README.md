@@ -57,10 +57,10 @@ usage: samtools view \<mapped.bam\> \| ./sam2fastq.py - \> \<out.fq\>
 
 splitFastq is a program to split fastq files from next-gen sequencing libraries.
 
-	usage: splitFastq -i \<fqfile\> -n \<\# of record per file\> -o \<prefix\>
+	usage: splitFastq -i <fqfile> -n <\# of record per file> -o <prefix>
 	[options]
-	-i    \<fastq file\>
-	-n    \<number of record in each splitted file\> default: 10000000
-	-o    \<prefix\>
+	-i    <gzip fastq file>
+	-n    <number of record in each splitted file> default: 10000000
+	-o    <prefix>
 
 this program aims to split reads before mapping or any analysis in order to make use of high-throughput computing and reduce run time for different type of analysis. 
