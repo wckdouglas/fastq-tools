@@ -6,7 +6,7 @@ CPPFlags=-lgzstream -lz -Wall
 ZipFlags=-lstdc++
 INCLUDE=-I include
 
-all: binary filterFastq fastqSize splitFastq
+all: binary filterFastq fastqSize splitFastq sam2fastq
 
 binary:
 	$(MKDIR)  bin
@@ -21,3 +21,5 @@ fastqSize:
 splitFastq:
 	$(Cpp) src/splitReads.cpp -o bin/splitFastq $(CPPFlags) $(ZipFlags)
 
+sam2fastq:
+	$(Cpp) src/sam2fastq.cpp -o bin/sam2fastq $(INCLUDE)
