@@ -4,10 +4,16 @@
 ###filter fastq
 I will store any NGS manipulation scripts in this repository.
 
-remove_reads.py and filterReads are both tools for filtering fastq files with unwanted read IDs. 
+remove_reads.py and filterFastq/filterFastqC are both tools for filtering fastq files with unwanted read IDs. 
 
-usage: ./remove_reads.py \<fastqFile\> \<idFile\>    
-usage:  ./filterReads \<fastqFile\> \<idFile\>    
+	usage: bin/filterFastq [options]
+
+	[options]
+	-q    <fastq file>
+	-i    <idFile>
+	-v    inverted match (same as grep -v)
+
+	usage: scripts/remove_reads.py <fastqFile> <idFile>    
 
 * \<fastqFile\> can be any four line fastq sequencing files
 	* line 1: id
@@ -54,7 +60,7 @@ Updated blog post: [C program and comparison](http://wckdouglas.github.io/mediat
 ###sam2fastq
 sam2fastq.py is a script to extract unmapped reads from sam file and write it in fastq format.    
 
-	usage: samtools view <mapped.bam> | ./sam2fastq.py - > <out.fq>
+	usage: samtools view <mapped.bam> | scripts/sam2fastq.py - > <out.fq>
 
 C++ version:
 
@@ -68,7 +74,7 @@ C++ version:
 ###splitFastq
 splitFastq is a program to split fastq files from next-gen sequencing libraries. Inspired by UNIX ***split*** function. 
 
-	usage: splitFastq -i <fqfile> -n <# of record per file> -o <prefix>
+	usage: bin/splitFastq -i <fqfile> -n <# of record per file> -o <prefix>
 	[options]
 	-i    <fastq file> can be gzipped
 	-n    <number of record in each splitted file> default: 10000000

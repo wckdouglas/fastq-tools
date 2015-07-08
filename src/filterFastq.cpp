@@ -80,7 +80,8 @@ void getID(char *idFile, int mode, kh_s_t *h)
 // print usage
 void usage(string programname)
 {
-	cerr << "usage: "<< programname << "[options]" << endl;
+	cerr << "usage: "<< programname << " [options] " << endl;
+	cerr << endl;
 	cerr << "[options]" << endl;
 	cerr << "-q    <fastq file>"  << endl;
 	cerr << "-i    <idFile>"  << endl;
