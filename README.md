@@ -15,6 +15,7 @@ usage:  ./filterReads \<fastqFile\> \<idFile\>
 	* line 4: quality scores
 * \<idFile\> sotres one id per line.
 
+Required: [gzstream library](http://www.cs.unc.edu/Research/compgeom/gzstream/)
 
 ---
 Benchmarking:
@@ -52,7 +53,7 @@ Updated blog post: [C program and comparison](http://wckdouglas.github.io/mediat
 sam2fastq.py is a script to extract unmapped reads from sam file and write it in fastq format.    
 
 usage: samtools view \<mapped.bam\> \| ./sam2fastq.py - \> \<out.fq\>
-
+i
 ---
 
 splitFastq is a program to split fastq files from next-gen sequencing libraries. Inspired by UNIX ***split*** function. 
@@ -64,3 +65,5 @@ splitFastq is a program to split fastq files from next-gen sequencing libraries.
 	-o    <prefix>
 
 this program aims to split reads before mapping or any analysis in order to make use of high-throughput computing and reduce run time for different type of analysis. 
+Required: [gzstream library](http://www.cs.unc.edu/Research/compgeom/gzstream/)
+
