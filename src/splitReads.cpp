@@ -23,7 +23,6 @@ string fixfilenum(int filenum)
 	return out;
 }
 
-
 void splitFastq(char *fqFile, string filePrefix, int recordNum)
 {
 	// open fastq file for kseq parsing 
@@ -62,20 +61,61 @@ void splitFastq(char *fqFile, string filePrefix, int recordNum)
 	cerr << "written " << filename << endl;
 }
 
+
+void splitFastqZip(char *fqFile, string filePrefix, int recordNum)
+{
+	// open fastq file for kseq parsing 
+	cerr << "From " << fqFile << "...." << endl;
+	cerr << "Splitting " << recordNum << " records per file" << endl;
+	int maxLine = recordNum * 4; 
+	int lineCount = 0, filenum = 0;
+	string filename;
+	igzstream in(fqFile);
+	ogzstream outFile;
+	for (string line; getline(in,line);)
+	{
+		if (lineCount == 0)
+		{			
+			filename = filePrefix + "_" + fixfilenum(filenum) + ".fastq.gz";
+			outFile.open(filename.c_str());		
+			outFile << line << '\n';
+		}
+		else if (lineCount == maxLine)
+		{
+			outFile.close();
+			cerr << "written " << filename << endl;
+			lineCount = 0;
+			filenum ++;
+			filename = filePrefix + "_" + fixfilenum(filenum) + ".fastq.gz";
+			outFile.open(filename.c_str());		
+			outFile << line << '\n';
+		}
+		else 
+		{
+			outFile << line << '\n';
+		}
+		lineCount ++; 
+	}
+	outFile.close();
+	cerr << "written " << filename << endl;
+}
+
 // print usage
 void usage(string programname)
 {
-	cerr << "usage: "<< programname << " -i <fqfile> -n <# of record per file> -o <prefix>" << endl;
+	cerr << "usage: "<< programname << " -i <fqfile> -n <# of record per file> -o <prefix> [-z]" << endl;
 	cerr << "[options]" << endl;
 	cerr << "-i    <fastq file>"  << endl;
 	cerr << "-n    <number of record in each splitted file> default: 10000000"  << endl;
 	cerr << "-o    <prefix>"  << endl;
+	cerr << "-z    optional: gzip output"  << endl;
 }
 
 // main function
 int main(int argc, char **argv){
 	char *fqFile;	
 	int c, recordNum = 10000000;
+	int gz = 0;
 
 	string programname = argv[0];
 	string filePrefix;
@@ -86,7 +126,7 @@ int main(int argc, char **argv){
 	
 	opterr = 0;
 	// print usage if not enough argumnets
-	while ((c = getopt(argc, argv, "i:n:o:")) != -1){
+	while ((c = getopt(argc, argv, "i:n:o:z")) != -1){
 		switch (c){
 			case 'i':
 				fqFile = optarg;
@@ -96,6 +136,9 @@ int main(int argc, char **argv){
 				break;
 			case 'o':
 				filePrefix = optarg;
+				break;
+			case 'z':
+				gz = 1;
 				break;
 			case '?':
 				if (optopt == 'n' || optopt == 'i' || optopt== 'o'){
@@ -112,7 +155,15 @@ int main(int argc, char **argv){
     }
 
 	// pass variable to fnuction
-	splitFastq(fqFile, filePrefix, recordNum);
+	if (gz == 0)
+	{
+		splitFastq(fqFile, filePrefix, recordNum);
+	}
+	else
+	{
+		splitFastqZip(fqFile, filePrefix, recordNum);
+
+	}
 	return 0;
 }
 

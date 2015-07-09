@@ -74,12 +74,12 @@ C++ version:
 ###splitFastq
 splitFastq is a program to split fastq files from next-gen sequencing libraries. Inspired by UNIX ***split*** function. 
 
-	usage: bin/splitFastq -i <fqfile> -n <# of record per file> -o <prefix>
+	usage: bin/splitFastq -i <fqfile> -n <# of record per file> -o <prefix> [-z]
 	[options]
 	-i    <fastq file> can be gzipped
 	-n    <number of record in each splitted file> default: 10000000
 	-o    <prefix>
+	-z    optional: gzip output
 
 this program aims to split reads before mapping or any analysis in order to make use of high-throughput computing and reduce run time for different type of analysis. 
 Required: [gzstream library](http://www.cs.unc.edu/Research/compgeom/gzstream/)
-
