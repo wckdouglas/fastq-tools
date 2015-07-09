@@ -122,7 +122,7 @@ int main(int argc, char **argv){
 	int gz = 0;
 
 	string programname = argv[0];
-	string filePrefix;
+	string filePrefix = ""; 
 	if (argc == 1){
 		usage(programname);
 		return 1;
@@ -157,6 +157,10 @@ int main(int argc, char **argv){
 				abort();
 		}
     }
+	if (filePrefix == "" || strcmp(fqFile,"") == 0)
+	{
+		usage(programname);
+	}
 
 	// pass variable to fnuction
 	if (gz == 0)
