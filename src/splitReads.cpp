@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <gzstream.h>
+#include <sstream>
 
 using namespace std;
 //get the id hash table and 
@@ -12,13 +13,16 @@ using namespace std;
 string fixfilenum(int filenum)
 {
 	string out;
+	ostringstream convert;
 	if (filenum > 10)
 	{
-		out = to_string(filenum);
+		convert << filenum;
+		out = convert.str();
 	}
 	else
 	{
-		out = "0" + to_string(filenum);
+		convert << filenum;
+		out = "0" + convert.str();
 	}
 	return out;
 }
