@@ -160,6 +160,7 @@ int main(int argc, char **argv){
 	if (filePrefix == "" || strcmp(fqFile,"") == 0)
 	{
 		usage(programname);
+		return 1;
 	}
 
 	// pass variable to fnuction
