@@ -42,7 +42,7 @@ void splitFastq(char *fqFile, string filePrefix, int recordNum)
 		if (lineCount == 0)
 		{			
 			filename = filePrefix + "_" + fixfilenum(filenum) + ".fastq";
-			outFile.open(filename);		
+			outFile.open(filename.c_str());		
 			outFile << line << '\n';
 		}
 		else if (lineCount == maxLine)
@@ -52,7 +52,7 @@ void splitFastq(char *fqFile, string filePrefix, int recordNum)
 			lineCount = 0;
 			filenum ++;
 			filename = filePrefix + "_" + fixfilenum(filenum) + ".fastq";
-			outFile.open(filename);		
+			outFile.open(filename.c_str());		
 			outFile << line << '\n';
 		}
 		else 
