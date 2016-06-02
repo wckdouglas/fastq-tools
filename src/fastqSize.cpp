@@ -1,7 +1,7 @@
 #include <glob.h>
 #include <iostream>
 #include <fstream>
-#include <gzstream.h>
+#include "gzstream.h"
 #include <sstream>
 #include <stdlib.h>
 #include <string>
