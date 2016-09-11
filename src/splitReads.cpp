@@ -2,8 +2,9 @@
 #include <cstring>
 #include <iostream>
 #include <fstream>
-#include <gzstream.h>
+#include "gzstream.h"
 #include <sstream>
+#include <stdlib.h>
 
 using namespace std;
 //get the id hash table and 
