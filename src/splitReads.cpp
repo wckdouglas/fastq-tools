@@ -4,11 +4,8 @@
 #include <fstream>
 #include "gzstream.h"
 #include <sstream>
-<<<<<<< HEAD
 #include <stdlib.h>
-=======
 #include <cstdlib>
->>>>>>> 2002b9c2bbe06ca1068fc628edf8572864b91466
 
 using namespace std;
 //get the id hash table and 
