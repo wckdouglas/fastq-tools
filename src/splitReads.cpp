@@ -8,7 +8,7 @@
 #include <cstdlib>
 
 using namespace std;
-//get the id hash table and 
+//get the id hash table and
 //iterate over the fastq file
 // determine which sequence to print out
 
@@ -29,12 +29,12 @@ string fixfilenum(int filenum)
 	return out;
 }
 
-void splitFastq(char *fqFile, string filePrefix, int recordNum)
+void splitFastq(char *fqFile, string filePrefix, int recordNum, string suffix)
 {
-	// open fastq file for kseq parsing 
+	// open fastq file for kseq parsing
 	cerr << "From " << fqFile << "...." << endl;
 	cerr << "Splitting " << recordNum << " records per file" << endl;
-	int maxLine = recordNum * 4; 
+	int maxLine = recordNum * 4;
 	int lineCount = 0, filenum = 0;
 	string filename;
 	igzstream in(fqFile);
@@ -42,9 +42,9 @@ void splitFastq(char *fqFile, string filePrefix, int recordNum)
 	for (string line; getline(in,line);)
 	{
 		if (lineCount == 0)
-		{			
-			filename = filePrefix + "_" + fixfilenum(filenum) + ".fastq";
-			outFile.open(filename.c_str());		
+		{
+			filename = fixfilenum(filenum) + filePrefix + "_" + suffix;
+			outFile.open(filename.c_str());
 			outFile << line << '\n';
 		}
 		else if (lineCount == maxLine)
@@ -53,54 +53,15 @@ void splitFastq(char *fqFile, string filePrefix, int recordNum)
 			cerr << "written " << filename << endl;
 			lineCount = 0;
 			filenum ++;
-			filename = filePrefix + "_" + fixfilenum(filenum) + ".fastq";
-			outFile.open(filename.c_str());		
+			filename = fixfilenum(filenum) + filePrefix + "_" + suffix;
+			outFile.open(filename.c_str());
 			outFile << line << '\n';
 		}
-		else 
+		else
 		{
 			outFile << line << '\n';
 		}
-		lineCount ++; 
-	}
-	outFile.close();
-	cerr << "written " << filename << endl;
-}
-
-
-void splitFastqZip(char *fqFile, string filePrefix, int recordNum)
-{
-	// open fastq file for kseq parsing 
-	cerr << "From " << fqFile << "...." << endl;
-	cerr << "Splitting " << recordNum << " records per file" << endl;
-	int maxLine = recordNum * 4; 
-	int lineCount = 0, filenum = 0;
-	string filename;
-	igzstream in(fqFile);
-	ogzstream outFile;
-	for (string line; getline(in,line);)
-	{
-		if (lineCount == 0)
-		{			
-			filename = filePrefix + "_" + fixfilenum(filenum) + ".fastq.gz";
-			outFile.open(filename.c_str());		
-			outFile << line << '\n';
-		}
-		else if (lineCount == maxLine)
-		{
-			outFile.close();
-			cerr << "written " << filename << endl;
-			lineCount = 0;
-			filenum ++;
-			filename = filePrefix + "_" + fixfilenum(filenum) + ".fastq.gz";
-			outFile.open(filename.c_str());		
-			outFile << line << '\n';
-		}
-		else 
-		{
-			outFile << line << '\n';
-		}
-		lineCount ++; 
+		lineCount ++;
 	}
 	outFile.close();
 	cerr << "written " << filename << endl;
@@ -119,17 +80,18 @@ void usage(string programname)
 
 // main function
 int main(int argc, char **argv){
-	char *fqFile;	
+	char *fqFile;
 	int c, recordNum = 10000000;
 	int gz = 0;
 
 	string programname = argv[0];
-	string filePrefix = ""; 
+	string filePrefix = "";
+	string suffix = "";
 	if (argc == 1){
 		usage(programname);
 		return 1;
 	}
-	
+
 	opterr = 0;
 	// print usage if not enough argumnets
 	while ((c = getopt(argc, argv, "i:n:o:z")) != -1){
@@ -168,13 +130,12 @@ int main(int argc, char **argv){
 	// pass variable to fnuction
 	if (gz == 0)
 	{
-		splitFastq(fqFile, filePrefix, recordNum);
+		suffix = ".fastq";
 	}
 	else
 	{
-		splitFastqZip(fqFile, filePrefix, recordNum);
-
+		suffix = ".fastq.gz";
 	}
+	splitFastq(fqFile, filePrefix, recordNum, suffix);
 	return 0;
 }
-
