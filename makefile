@@ -1,25 +1,24 @@
 CC=gcc
-Cpp=g++
+CPP=g++
 MKDIR=mkdir -p
-CFLAGS=-lz
-CPPFlags=-lgzstream -lz -Wall -I./include -L./include
-ZipFlags=-lstdc++
-INCLUDE=-I include
+GZLIB_FLAG=-L./lib -lgzstream -lz
+CPP_FLAGS=-lstdc++ $(GZLIB_FLAG)
+INCLUDE=-I./include 
 
-all: binary filterFastq fastqSize splitFastq sam2fastq
+all: binary filterFastq splitFastq sam2fastq
 
 binary:
 	$(MKDIR)  bin
 
 filterFastq: 
-	$(CC) src/filterFastq.c -o bin/filterFastqC  $(CFLAGS) $(INCLUDE)
-	$(Cpp) src/filterFastq.cpp -o bin/filterFastq  $(CFLAGS) $(INCLUDE)
+	$(CC) src/filterFastq.c -o bin/filterFastqC  $(GZLIB_FLAG) $(INCLUDE)
+	$(CPP) src/filterFastq.cpp -o bin/filterFastq  $(CPP_FLAGS) $(INCLUDE)
 
 fastqSize: 
-	$(Cpp) src/fastqSize.cpp -o bin/fastqSize  $(CPPFlags)
+	$(CPP) src/fastqSize.cpp -o bin/fastqSize  $(CPPFlags) $(INCLUDE)
 
 splitFastq:
-	$(Cpp) src/splitReads.cpp -o bin/splitFastq $(CPPFlags) $(ZipFlags)
+	$(CPP) src/splitReads.cpp -o bin/splitFastq $(CPPFlags) $(GZLIB_FLAG) $(INCLUDE)
 
 sam2fastq:
-	$(Cpp) src/sam2fastq.cpp -o bin/sam2fastq $(INCLUDE)
+	$(CPP) src/sam2fastq.cpp -o bin/sam2fastq $(INCLUDE) $(GZLIB_FLAG)
