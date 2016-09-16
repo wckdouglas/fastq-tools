@@ -2,7 +2,7 @@ CC=gcc
 Cpp=g++
 MKDIR=mkdir -p
 CFLAGS=-lz
-CPPFlags=-lgzstream -lz -Wall
+CPPFlags=-lgzstream -lz -Wall -I./include -L./include
 ZipFlags=-lstdc++
 INCLUDE=-I include
 

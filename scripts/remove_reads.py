@@ -3,7 +3,6 @@
 from Bio.SeqIO.QualityIO import FastqGeneralIterator
 import sys
 
-
 if len(sys.argv) != 3:
     sys.exit('\nusage: python remove_reads.py fastqFile idFile \n\
               \nThis is a prgram to remove records from id list output is a fastq file \

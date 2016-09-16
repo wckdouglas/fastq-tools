@@ -2,7 +2,7 @@
 #include <cstring>
 #include <iostream>
 #include <fstream>
-#include <gzstream.h>
+#include "gzstream.h"
 #include <sstream>
 
 using namespace std;
