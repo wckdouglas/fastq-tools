@@ -4,7 +4,7 @@
 ###filter fastq
 I will store any NGS manipulation scripts in this repository.
 
-remove_reads.py and filterFastq/filterFastqC are both tools for filtering fastq files with unwanted read IDs. 
+remove_reads.py and filterFastq/filterFastqC are both tools for filtering fastq files with unwanted read IDs.
 
 	usage: bin/filterFastq [options]
 
@@ -58,7 +58,7 @@ Updated blog post: [C program and comparison](http://wckdouglas.github.io/mediat
 
 ---
 ###sam2fastq
-sam2fastq.py is a script to extract unmapped reads from sam file and write it in fastq format.    
+sam2fastq.py is a script to extract reads from sam file and write it in fastq format.    
 
 	usage: samtools view <mapped.bam> | scripts/sam2fastq.py - > <out.fq>
 
@@ -72,7 +72,7 @@ C++ version:
 ---
 
 ###splitFastq
-splitFastq is a program to split fastq files from next-gen sequencing libraries. Inspired by UNIX ***split*** function. 
+splitFastq is a program to split fastq files from next-gen sequencing libraries. Inspired by UNIX ***split*** function.
 
 	usage: bin/splitFastq -i <fqfile> -n <# of record per file> -o <prefix> [-z]
 	[options]
@@ -81,5 +81,5 @@ splitFastq is a program to split fastq files from next-gen sequencing libraries.
 	-o    <prefix>
 	-z    optional: gzip output
 
-this program aims to split reads before mapping or any analysis in order to make use of high-throughput computing and reduce run time for different type of analysis. 
+this program aims to split reads before mapping or any analysis in order to make use of high-throughput computing and reduce run time for different type of analysis.
 Required: [gzstream library](http://www.cs.unc.edu/Research/compgeom/gzstream/)

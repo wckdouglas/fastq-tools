@@ -29,41 +29,78 @@ string fixfilenum(int filenum)
 	return out;
 }
 
-void splitFastq(char *fqFile, string filePrefix, int recordNum, string suffix)
+void splitFastq(char *fqFile, string filePrefix, int recordNum, int gz)
 {
 	// open fastq file for kseq parsing
 	cerr << "From " << fqFile << "...." << endl;
 	cerr << "Splitting " << recordNum << " records per file" << endl;
 	int maxLine = recordNum * 4;
-	int lineCount = 0, filenum = 0;
+	int lineCount = 0, filenum = 1;
+	string suffix;
 	string filename;
 	igzstream in(fqFile);
-	ofstream outFile;
-	for (string line; getline(in,line);)
+
+	if (gz == 0)
 	{
-		if (lineCount == 0)
+		suffix = ".fastq";
+		ofstream outFile;
+		for (string line; getline(in,line);)
 		{
-			filename = fixfilenum(filenum) + filePrefix + "_" + suffix;
-			outFile.open(filename.c_str());
-			outFile << line << '\n';
+			if (lineCount == 0)
+			{
+				filename = fixfilenum(filenum) +  "-" + filePrefix  + suffix;
+				outFile.open(filename.c_str());
+				outFile << line << '\n';
+			}
+			else if (lineCount == maxLine)
+			{
+				outFile.close();
+				cerr << "written " << filename << endl;
+				lineCount = 0;
+				filenum ++;
+				filename = fixfilenum(filenum) + "-" + filePrefix  + suffix;
+				outFile.open(filename.c_str());
+				outFile << line << '\n';
+			}
+			else
+			{
+				outFile << line << '\n';
+			}
+			lineCount ++;
 		}
-		else if (lineCount == maxLine)
-		{
-			outFile.close();
-			cerr << "written " << filename << endl;
-			lineCount = 0;
-			filenum ++;
-			filename = fixfilenum(filenum) + filePrefix + "_" + suffix;
-			outFile.open(filename.c_str());
-			outFile << line << '\n';
-		}
-		else
-		{
-			outFile << line << '\n';
-		}
-		lineCount ++;
+		outFile.close();
 	}
-	outFile.close();
+	else
+	{
+		suffix = ".fastq.gz";
+		ogzstream outFile;
+		for (string line; getline(in,line);)
+		{
+			if (lineCount == 0)
+			{
+				filename = fixfilenum(filenum) +  "-" + filePrefix  + suffix;
+				outFile.open(filename.c_str());
+				outFile << line << '\n';
+			}
+			else if (lineCount == maxLine)
+			{
+				outFile.close();
+				cerr << "written " << filename << endl;
+				lineCount = 0;
+				filenum ++;
+				filename = fixfilenum(filenum) + "-" + filePrefix  + suffix;
+				outFile.open(filename.c_str());
+				outFile << line << '\n';
+			}
+			else
+			{
+				outFile << line << '\n';
+			}
+			lineCount ++;
+		}
+		outFile.close();
+	}
+
 	cerr << "written " << filename << endl;
 }
 
@@ -86,7 +123,6 @@ int main(int argc, char **argv){
 
 	string programname = argv[0];
 	string filePrefix = "";
-	string suffix = "";
 	if (argc == 1){
 		usage(programname);
 		return 1;
@@ -127,15 +163,6 @@ int main(int argc, char **argv){
 		return 1;
 	}
 
-	// pass variable to fnuction
-	if (gz == 0)
-	{
-		suffix = ".fastq";
-	}
-	else
-	{
-		suffix = ".fastq.gz";
-	}
-	splitFastq(fqFile, filePrefix, recordNum, suffix);
+	splitFastq(fqFile, filePrefix, recordNum, gz);
 	return 0;
 }
