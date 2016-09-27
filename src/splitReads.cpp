@@ -39,21 +39,6 @@ void SplitFilename (const string& str, string &samplename, string &filepath)
   samplename =  str.substr(found+1);
 }
 
-//http://stackoverflow.com/questions/8520560/get-a-file-name-from-a-path
-string base_name(string const & path)
-{
-  return path.substr(path.find_last_of("/\\") + 1);
-}
-
-//http://stackoverflow.com/questions/5077693/dirnamephp-similar-function-in-c
-string dir_name(string source)
-{
-	auto finding = find(source.rbegin(), source.rend(), '/');
-    source.erase(finding.base(), source.end());
-    return source;
-}
-
-
 void splitFastq(char *fqFile, string filePrefix, int recordNum, int gz)
 {
 	// open fastq file for kseq parsing
@@ -77,7 +62,7 @@ void splitFastq(char *fqFile, string filePrefix, int recordNum, int gz)
 		{
 			if (lineCount == 0)
 			{
-				filename = filepath + fixfilenum(filenum) +  "-" + samplename  + suffix;
+				filename = filepath + "/" + fixfilenum(filenum) +  "-" + samplename  + suffix;
 				outFile.open(filename.c_str());
 				outFile << line << '\n';
 			}
@@ -87,7 +72,7 @@ void splitFastq(char *fqFile, string filePrefix, int recordNum, int gz)
 				cerr << "written " << filename << endl;
 				lineCount = 0;
 				filenum ++;
-				filename = filepath + fixfilenum(filenum) +  "-" + samplename  + suffix;
+				filename = filepath + "/" + fixfilenum(filenum) +  "-" + samplename  + suffix;
 				outFile.open(filename.c_str());
 				outFile << line << '\n';
 			}
@@ -107,7 +92,7 @@ void splitFastq(char *fqFile, string filePrefix, int recordNum, int gz)
 		{
 			if (lineCount == 0)
 			{
-				filename = filepath + fixfilenum(filenum) +  "-" + samplename  + suffix;
+				filename = filepath + "/" + fixfilenum(filenum) +  "-" + samplename  + suffix;
 				outFile.open(filename.c_str());
 				outFile << line << '\n';
 			}
@@ -117,7 +102,7 @@ void splitFastq(char *fqFile, string filePrefix, int recordNum, int gz)
 				cerr << "written " << filename << endl;
 				lineCount = 0;
 				filenum ++;
-				filename = filepath + fixfilenum(filenum) +  "-" + samplename  + suffix;
+				filename = filepath + "/" + fixfilenum(filenum) +  "-" + samplename  + suffix;
 				outFile.open(filename.c_str());
 				outFile << line << '\n';
 			}
