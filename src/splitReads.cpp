@@ -38,7 +38,7 @@ string base_name(string const & path)
 //http://stackoverflow.com/questions/5077693/dirnamephp-similar-function-in-c
 string dir_name(string source)
 {
-    source.erase(std::find(source.rbegin(), source.rend(), '/').base(), source.end());
+    source.erase(find(source.rbegin(), source.rend(), '/').base(), source.end());
     return source;
 }
 
