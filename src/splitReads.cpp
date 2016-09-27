@@ -29,6 +29,20 @@ string fixfilenum(int filenum)
 	return out;
 }
 
+//http://stackoverflow.com/questions/8520560/get-a-file-name-from-a-path
+string base_name(string const & path)
+{
+  return path.substr(path.find_last_of("/\\") + 1);
+}
+
+//http://stackoverflow.com/questions/5077693/dirnamephp-similar-function-in-c
+string dir_name(string source)
+{
+    source.erase(std::find(source.rbegin(), source.rend(), '/').base(), source.end());
+    return source;
+}
+
+
 void splitFastq(char *fqFile, string filePrefix, int recordNum, int gz)
 {
 	// open fastq file for kseq parsing
@@ -36,6 +50,9 @@ void splitFastq(char *fqFile, string filePrefix, int recordNum, int gz)
 	cerr << "Splitting " << recordNum << " records per file" << endl;
 	int maxLine = recordNum * 4;
 	int lineCount = 0, filenum = 1;
+	string samplename = base_name(filePrefix);
+	string filepath = dir_name(filePrefix);
+
 	string suffix;
 	string filename;
 	igzstream in(fqFile);
@@ -48,7 +65,7 @@ void splitFastq(char *fqFile, string filePrefix, int recordNum, int gz)
 		{
 			if (lineCount == 0)
 			{
-				filename = fixfilenum(filenum) +  "-" + filePrefix  + suffix;
+				filename = filepath + fixfilenum(filenum) +  "-" + samplename  + suffix;
 				outFile.open(filename.c_str());
 				outFile << line << '\n';
 			}
@@ -58,7 +75,7 @@ void splitFastq(char *fqFile, string filePrefix, int recordNum, int gz)
 				cerr << "written " << filename << endl;
 				lineCount = 0;
 				filenum ++;
-				filename = fixfilenum(filenum) + "-" + filePrefix  + suffix;
+				filename = filepath + fixfilenum(filenum) +  "-" + samplename  + suffix;
 				outFile.open(filename.c_str());
 				outFile << line << '\n';
 			}
@@ -78,7 +95,7 @@ void splitFastq(char *fqFile, string filePrefix, int recordNum, int gz)
 		{
 			if (lineCount == 0)
 			{
-				filename = fixfilenum(filenum) +  "-" + filePrefix  + suffix;
+				filename = filepath + fixfilenum(filenum) +  "-" + samplename  + suffix;
 				outFile.open(filename.c_str());
 				outFile << line << '\n';
 			}
@@ -88,7 +105,7 @@ void splitFastq(char *fqFile, string filePrefix, int recordNum, int gz)
 				cerr << "written " << filename << endl;
 				lineCount = 0;
 				filenum ++;
-				filename = fixfilenum(filenum) + "-" + filePrefix  + suffix;
+				filename = filepath + fixfilenum(filenum) +  "-" + samplename  + suffix;
 				outFile.open(filename.c_str());
 				outFile << line << '\n';
 			}
