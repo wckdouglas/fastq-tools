@@ -38,7 +38,8 @@ string base_name(string const & path)
 //http://stackoverflow.com/questions/5077693/dirnamephp-similar-function-in-c
 string dir_name(string source)
 {
-    source.erase(find(source.rbegin(), source.rend(), '/').base(), source.end());
+	auto finding = find(source.rbegin(), source.rend(), '/');
+    source.erase(finding.base(), source.end());
     return source;
 }
 
