@@ -18,7 +18,7 @@ fastqSize:
 	$(CPP) src/fastqSize.cpp -o bin/fastqSize  $(CPPFlags) $(INCLUDE)
 
 splitFastq:
-	$(CPP) src/splitReads.cpp -o bin/splitFastq $(CPPFlags) $(GZLIB_FLAG) $(INCLUDE)
+	$(CPP) src/splitReads.cpp -o bin/splitFastq $(CPPFlags) $(GZLIB_FLAG) $(INCLUDE) -Wc++11-extensions
 
 sam2fastq:
 	$(CPP) src/sam2fastq.cpp -o bin/sam2fastq $(INCLUDE) $(GZLIB_FLAG)

@@ -29,6 +29,16 @@ string fixfilenum(int filenum)
 	return out;
 }
 
+//http://stackoverflow.com/questions/3071665/getting-a-directory-name-from-a-filename
+void SplitFilename (const string& str, string &samplename, string &filepath)
+{
+  size_t found;
+  cout << "Splitting: " << str << endl;
+  found=str.find_last_of("/\\");
+  filepath = str.substr(0,found);
+  samplename =  str.substr(found+1);
+}
+
 //http://stackoverflow.com/questions/8520560/get-a-file-name-from-a-path
 string base_name(string const & path)
 {
@@ -51,8 +61,9 @@ void splitFastq(char *fqFile, string filePrefix, int recordNum, int gz)
 	cerr << "Splitting " << recordNum << " records per file" << endl;
 	int maxLine = recordNum * 4;
 	int lineCount = 0, filenum = 1;
-	string samplename = base_name(filePrefix);
-	string filepath = dir_name(filePrefix);
+	string samplename = "";
+	string filepath = "";
+	SplitFilename(filePrefix, samplename, filepath);
 
 	string suffix;
 	string filename;
