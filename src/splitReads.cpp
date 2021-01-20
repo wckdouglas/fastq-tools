@@ -34,9 +34,14 @@ void SplitFilename (const string& str, string &samplename, string &filepath)
 {
   size_t found;
   cout << "Splitting: " << str << endl;
-  found=str.find_last_of("/\\");
-  filepath = str.substr(0,found);
-  samplename =  str.substr(found+1);
+  if (str.find("/")!=std::string::npos){
+      found = str.find_last_of("/\\");
+      filepath = str.substr(0,found);
+      samplename =  str.substr(found+1);
+ }else{
+     filepath = ".";
+     samplename = str;
+ }
 }
 
 void splitFastq(char *fqFile, string filePrefix, int recordNum, int gz)
